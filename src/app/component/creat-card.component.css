@@ -1,0 +1,30 @@
+.card-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-preview {
+  width: 350px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-content {
+  padding: 10px;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+
+.user-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
