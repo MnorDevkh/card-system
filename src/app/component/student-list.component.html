@@ -1,0 +1,156 @@
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Student List</h2>
+
+    <div>
+      <button
+        class="btn btn-success me-2"
+        (click)="exportToExcel()"
+        [disabled]="students.length === 0"
+      >
+        Export to Excel
+      </button>
+
+       <button
+        class="btn btn-info me-2"
+        (click)="exportToExcel()"
+        [disabled]="students.length === 0"
+      >
+        Export Card
+      </button>
+
+      <label class="btn btn-primary mb-0">
+        Upload Excel
+        <input
+          type="file"
+          (change)="uploadExcel($event)"
+          hidden
+          [disabled]="uploading"
+        />
+      </label>
+      <span *ngIf="uploading" class="ms-2 text-muted">Uploading...</span>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-sm">
+      <thead class="table-light text-nowrap">
+        <tr>
+          <th>No</th>
+          <th>Card ID</th>
+          <th>Identity ID</th>
+          <th>Name Khmer</th>
+          <th>Name English</th>
+          <th>Gender</th>
+          <th>Birth Date</th>
+          <th>Birth Place Village</th>
+          <th>Birth Place Commune</th>
+          <th>Birth Place District</th>
+          <th>Birth Place Province</th>
+          <th>Current Address Village</th>
+          <th>Current Address Commune</th>
+          <th>Current Address District</th>
+          <th>Current Address Province</th>
+          <th>Phone</th>
+          <th>Guardian Name</th>
+          <th>Guardian Phone</th>
+          <th>Education Level</th>
+          <th>Bac II Code</th>
+          <th>Bac II Year</th>
+          <th>Bac II Result</th>
+          <th>High School</th>
+          <th>Faculty</th>
+          <th>Major</th>
+          <th>Study Shift</th>
+          <th>Scholarship Type</th>
+          <th>Scholarship Card ID</th>
+          <th>Scholarship Bye</th>
+          <th>Email</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody class="text-nowrap">
+        @if (loading) {
+        <tr>
+          <td colspan="31" class="text-center">Loading...</td>
+        </tr>
+        } @else { @for (student of students; track student.id; let i = $index) {
+        <tr>
+          <td>{{ i + 1 + (currentPage - 1) * limit }}</td>
+          <td>{{ student.card_id || "" }}</td>
+          <td>{{ student.identity_id || "" }}</td>
+          <td>{{ student.name?.khmer || "" }}</td>
+          <td>{{ student.name?.english || "" }}</td>
+          <td>{{ student.gender || "" }}</td>
+          <td>{{ student.birth_date || "" }}</td>
+          <td>{{ student.birth_place?.village || "" }}</td>
+          <td>{{ student.birth_place?.commune || "" }}</td>
+          <td>{{ student.birth_place?.district || "" }}</td>
+          <td>{{ student.birth_place?.province || "" }}</td>
+          <td>{{ student.current_address?.village || "" }}</td>
+          <td>{{ student.current_address?.commune || "" }}</td>
+          <td>{{ student.current_address?.district || "" }}</td>
+          <td>{{ student.current_address?.province || "" }}</td>
+          <td>{{ student.phone || "" }}</td>
+          <td>{{ student.guardian?.name || "" }}</td>
+          <td>{{ student.guardian?.phone || "" }}</td>
+          <td>{{ student.education_level || "" }}</td>
+          <td>{{ student.bacII_code || "" }}</td>
+          <td>{{ student.bacII_year || "" }}</td>
+          <td>{{ student.bacII_result || "" }}</td>
+          <td>{{ student.high_school || "" }}</td>
+          <td>{{ student.faculty || "" }}</td>
+          <td>{{ student.major || "" }}</td>
+          <td>{{ student.study_shift || "" }}</td>
+          <td>{{ student.scholarship_type || "" }}</td>
+          <td>
+            {{ student.scholarship_type ? student.scholarship_card_id : "" }}
+          </td>
+          <td>{{ student.scholarship_by || "" }}</td>
+          <td>{{ student.email || "" }}</td>
+          <td>{{ student.notes || "" }}</td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="31" class="text-center">No students found.</td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="totalPages() > 1" class="mt-3">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button
+          class="page-link"
+          (click)="loadStudents(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          Previous
+        </button>
+      </li>
+
+      <li
+        class="page-item"
+        *ngFor="let page of pages"
+        [class.active]="page === currentPage"
+      >
+        <button class="page-link" (click)="loadStudents(page)">
+          {{ page }}
+        </button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages()">
+        <button
+          class="page-link"
+          (click)="loadStudents(currentPage + 1)"
+          [disabled]="currentPage === totalPages()"
+        >
+          Next
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
