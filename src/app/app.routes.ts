@@ -5,10 +5,11 @@ import { CardEditorComponent } from './component/card-editor.component';
 import { UploadImageComponent } from './component/add-card-template.component';
 import { CardTemplateListComponent } from './component/card-template-list.component';
 import { StudentListComponent } from './component/student-list.component';
+import { CardGeneratorComponent } from './component/card-generator.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'card-generator/:id', component: CardEditorComponent },
+  { path: 'card-generator/:id', component: CardGeneratorComponent },
   { path: 'menu', component: MenuComponent },
   { path: 'card', component: CardTemplateListComponent },
   { path: 'upload-template', component: UploadImageComponent },

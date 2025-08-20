@@ -3,6 +3,9 @@ import { UploadService } from '../service/upload.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 interface CardTemplate {
   id: number;
@@ -12,9 +15,10 @@ interface CardTemplate {
 @Component({
   selector: 'app-card-template-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NzButtonModule, NzCardModule, NzGridModule],
   templateUrl: './card-template-list.component.html',
   providers: [UploadService],
+  
 })
 export class CardTemplateListComponent implements OnInit {
   cardTemplates: CardTemplate[] = [];
@@ -24,40 +28,32 @@ export class CardTemplateListComponent implements OnInit {
   ngOnInit(): void {
     this.loadUploadedImages();
   }
+
   loadUploadedImages(): void {
     this.uploadService.getListImage('template').subscribe({
       next: (files) => {
-
-        // files is FileMeta[]
         this.cardTemplates = [];
-
         files.forEach((file) => {
           this.uploadService.getImage(file.filename).subscribe({
             next: (imageUrl) => {
-              this.cardTemplates.push({
-                id: file.id,
-                imageUrl,
-              });
+              this.cardTemplates.push({ id: file.id, imageUrl });
             },
-            error: (err) => {
-              console.error('Failed to load image:', err);
-            },
+            error: (err) => console.error('Failed to load image:', err),
           });
         });
       },
-      error: (err) => {
-        console.error('Failed to load image list:', err);
-      },
+      error: (err) => console.error('Failed to load image list:', err),
     });
   }
 
- selectTemplate(id: number | null | undefined): void {
-  if (id == null) {
-    alert('Invalid template ID');
-    return;
+  selectTemplate(id: number | null | undefined): void {
+    if (id == null) {
+      alert('Invalid template ID');
+      return;
+    }
+    this.router.navigate(['/card-generator', id]);
   }
-  this.router.navigate(['/card-generator', id]);
-}
+
   updateTemplate(id: number): void {
     console.log('Update template:', id);
   }
@@ -71,13 +67,9 @@ export class CardTemplateListComponent implements OnInit {
     if (!input.files?.length) return;
 
     const file = input.files[0];
-    this.uploadService.uploadImage(file,0, 'template').subscribe({
-      next: (response) => {
-        this.loadUploadedImages();
-      },
-      error: (error) => {
-        console.error('Upload failed:', error);
-      },
+    this.uploadService.uploadImage(file, 0, 'template').subscribe({
+      next: () => this.loadUploadedImages(),
+      error: (error) => console.error('Upload failed:', error),
     });
   }
 }

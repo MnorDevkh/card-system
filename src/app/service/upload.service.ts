@@ -24,15 +24,15 @@ export class UploadService {
     formData.append('related_id', related_id.toString());
     formData.append('type', type);
 
-    return this.http.post(`${this.baseUrl}upload_image/upload/`, formData);
+    return this.http.post(`${this.baseUrl}upload_image/upload/?type_=${type}&related_id=${related_id}`, formData);
   }
 
   getListImage(type: string): Observable<FileMeta[]> {
     return this.http.get<FileMeta[]>(
-      `${this.baseUrl + 'upload_image/list/'}${type}`
+      `${this.baseUrl + 'upload_image/type/'}${type}`
     );
   }
   getImage(filename: string): Observable<string> {
-    return of(`${this.baseUrl + 'upload_image/images/'}${filename}`);
+    return of(`${this.baseUrl + 'upload_image/image/'}${filename}`);
   }
 }

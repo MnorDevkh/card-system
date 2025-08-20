@@ -7,7 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { log } from 'console';
 import e from 'express';
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 interface CardInfo {
   idNumber: string;
   name: string;
@@ -18,7 +20,7 @@ interface CardInfo {
 @Component({
   selector: 'app-card-editor',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NzCardModule, NzGridModule],
   templateUrl: './card-editor.component.html',
 })
 export class CardEditorComponent implements OnInit {
@@ -30,9 +32,9 @@ export class CardEditorComponent implements OnInit {
     private route: ActivatedRoute,
     private cardService: CardService,
     private sanitizer: DomSanitizer,
-    private cd: ChangeDetectorRef,
-    // private router: Router
-  ) {}
+    private cd: ChangeDetectorRef
+  ) // private router: Router
+  {}
   private baseUrl = environment.apiBaseUrl;
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
@@ -41,29 +43,18 @@ export class CardEditorComponent implements OnInit {
         this.cardService.getBackground(+id).subscribe((res) => {
           const encodedFilename = encodeURIComponent(res.filename);
           console.log(encodedFilename);
-          
+
           const imageUrl = `${this.baseUrl}upload_image/images/${encodedFilename}`;
           console.log(imageUrl);
           this.backgroundImageUrl = this.sanitizer.bypassSecurityTrustStyle(
             `url(${imageUrl})`
-           
-            
-          ); console.log(`${this.backgroundImageUrl}`);
+          );
+          console.log(`${this.backgroundImageUrl}`);
           this.cd.detectChanges();
         });
       }
     });
-
-    // this.cardService.getCardTemplateData().subscribe((data) => {
-    //   this.cardData = data;
-    // });
   }
-//   reloadComponent() {
-//   const id = this.route.snapshot.paramMap.get('id');
-//   this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-//     this.router.navigate(['card-editor', id]);
-//   });
-// }
 
   onBackgroundSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -80,8 +71,8 @@ export class CardEditorComponent implements OnInit {
       );
     }
   }
-  
-    onExcelUpload(event: Event) {
+
+  onExcelUpload(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
@@ -89,23 +80,22 @@ export class CardEditorComponent implements OnInit {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet);
+      // const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      // const workbook = XLSX.read(data, { type: 'array' });
+      // const sheetName = workbook.SheetNames[0];
+      // const worksheet = workbook.Sheets[sheetName];
+      // const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet);
 
-      this.cards = jsonData.map((item) => ({
-        idNumber: item['IDNumber'] || '',
-        name: item['Name'] || '',
-        role: item['Role'] || '',
-        expiryDate: item['ExpiryDate'] || '',
-        photoUrl: item['PhotoUrl'] || '',
-  
-      }));
+      // this.cards = jsonData.map((item) => ({
+      //   idNumber: item['IDNumber'] || '',
+      //   name: item['Name'] || '',
+      //   role: item['Role'] || '',
+      //   expiryDate: item['ExpiryDate'] || '',
+      //   photoUrl: item['PhotoUrl'] || '',
+      // }));
 
-      console.log('Cards loaded:', this.cards);
-      this.cd.detectChanges();
+      // console.log('Cards loaded:', this.cards);
+      // this.cd.detectChanges();
     };
 
     reader.readAsArrayBuffer(file);

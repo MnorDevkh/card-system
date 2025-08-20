@@ -1,0 +1,79 @@
+<div class="page-container">
+  
+  <div class="step-section">
+    <h2>Step 1: Select a Background Template</h2>
+    <nz-spin [nzSpinning]="loadingTemplates">
+      <div nz-row [nzGutter]="[16, 16]">
+        <div *ngFor="let template of cardTemplates" nz-col [nzXs]="12" [nzSm]="8" [nzMd]="6">
+          <nz-card
+            nzHoverable
+            (click)="onTemplateSelect(template.id)"
+            [class.selected]="template.id === selectedTemplateId"
+          >
+            <img 
+              nz-card-cover
+              [src]="template.imageUrl" 
+              alt="Card Template {{ template.id }}" 
+              class="template-image"
+            />
+            <nz-card-meta [nzTitle]="'Template ' + template.id"></nz-card-meta>
+          </nz-card>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+  <div class="step-section">
+    <h2>Step 2: Select Students</h2>
+    <nz-table
+      #studentTable
+      [nzData]="students"
+      [nzFrontPagination]="false"
+      [nzTotal]="totalStudents"
+      [nzPageIndex]="pageIndex"
+      [nzPageSize]="pageSize"
+      [nzLoading]="loadingStudents"
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    >
+      <thead>
+        <tr>
+          <th
+            [(nzChecked)]="isAllDisplayedDataChecked"
+            [nzIndeterminate]="isIndeterminate"
+            (nzCheckedChange)="onAllChecked($event)"
+          ></th>
+          <th>Name</th>
+          <th>Student ID</th>
+          <th>Major</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of students">
+          <td
+            [(nzChecked)]="mapOfCheckedId[data.id]"
+            (nzCheckedChange)="onItemChecked(data.id, $event)"
+          ></td>
+          <td>{{ data.name.english }}</td>
+          <td>{{ data.major }}</td>
+          <td>{{ data.email }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <div class="action-bar">
+    <button
+      nz-button
+      nzType="primary"
+      nzSize="large"
+      [disabled]="!selectedTemplateId || checkedNumber === 0"
+      (click)="generateCards()"
+    >
+      <!-- <i nz-icon nzType="thunderbolt"></i> -->
+      Generate {{ checkedNumber }} Card(s)
+    </button>
+  </div>
+
+</div>

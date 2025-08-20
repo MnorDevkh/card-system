@@ -1,4 +1,4 @@
-<div class="container my-5">
+<!-- <div class="container my-5">
   <div class="row justify-content-center">
 
       <div class="row justify-content-center mb-4">
@@ -69,4 +69,20 @@
     </div>
   </div>
   </div>
+</div> -->
+
+<div style="background: #ececec; padding: 30px">
+  <nz-card
+    style="width: 300px"
+    [nzBordered]="false"
+    nzTitle="Card title"
+    [nzExtra]="extraTemplate"
+  >
+    <p>Card content</p>
+    <p>Card content</p>
+    <p>Card content</p>
+  </nz-card>
 </div>
+<ng-template #extraTemplate>
+  <a>More</a>
+</ng-template>

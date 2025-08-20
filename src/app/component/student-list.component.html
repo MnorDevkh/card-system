@@ -11,7 +11,7 @@
         Export to Excel
       </button>
 
-       <button
+      <button
         class="btn btn-info me-2"
         (click)="exportToExcel()"
         [disabled]="students.length === 0"
@@ -36,6 +36,11 @@
     <table class="table table-bordered table-striped table-sm">
       <thead class="table-light text-nowrap">
         <tr>
+          <th
+            [(nzChecked)]="isAllDisplayedDataChecked"
+            [nzIndeterminate]="isIndeterminate"
+            (nzCheckedChange)="onAllChecked($event)"
+          ></th>
           <th>No</th>
           <th>Card ID</th>
           <th>Identity ID</th>
@@ -69,13 +74,22 @@
           <th>Notes</th>
         </tr>
       </thead>
-      <tbody class="text-nowrap">
+      <tbody>
         @if (loading) {
         <tr>
           <td colspan="31" class="text-center">Loading...</td>
         </tr>
         } @else { @for (student of students; track student.id; let i = $index) {
         <tr>
+          <td></td>
+          <td>
+            <label
+              nz-checkbox
+              [(ngModel)]="mapOfCheckedId[student.id]"
+              (ngModelChange)="onItemChecked(student.id, $event)"
+            >
+            </label>
+          </td>
           <td>{{ i + 1 + (currentPage - 1) * limit }}</td>
           <td>{{ student.card_id || "" }}</td>
           <td>{{ student.identity_id || "" }}</td>
@@ -120,37 +134,10 @@
   </div>
 
   <!-- Pagination -->
-  <nav *ngIf="totalPages() > 1" class="mt-3">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <button
-          class="page-link"
-          (click)="loadStudents(currentPage - 1)"
-          [disabled]="currentPage === 1"
-        >
-          Previous
-        </button>
-      </li>
-
-      <li
-        class="page-item"
-        *ngFor="let page of pages"
-        [class.active]="page === currentPage"
-      >
-        <button class="page-link" (click)="loadStudents(page)">
-          {{ page }}
-        </button>
-      </li>
-
-      <li class="page-item" [class.disabled]="currentPage === totalPages()">
-        <button
-          class="page-link"
-          (click)="loadStudents(currentPage + 1)"
-          [disabled]="currentPage === totalPages()"
-        >
-          Next
-        </button>
-      </li>
-    </ul>
-  </nav>
+  <div class="action-bar">
+    <button nz-button nzType="primary" nzSize="large">
+      <i nz-icon nzType="thunderbolt"></i>
+      Generate {{ checkedNumber }} Card(s)
+    </button>
+  </div>
 </div>
